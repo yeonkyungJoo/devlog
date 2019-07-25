@@ -1,0 +1,129 @@
+<!-- CTRL + a -> CTRL + k -> f : 코드정렬 -->
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <!-- 게이머 이름 입력 구간 -->
+        <div>
+            <fieldset>
+                <h2>Step1 : 게이머의 이름 입력</h2>
+                <input type='text' id='yourInput' placeholder="게이머 이름" />
+                <button onclick = "onSend()">입력</button>
+                <p id='gName'></p>
+            </fieldset>
+        </div>
+        <br>
+        <!-- 실제 게임 진행 구간 (숫자 입력) -->
+        <div>
+            <fieldset>
+                <h2>Step2 : 게임 진행 - 숫자 맞추기(1~99)</h2>
+                <input type='number' id='myValue' placeholder="AI의 값은?" />
+                <button id='shotBtn'>Shot</button>
+            </fieldset>
+        </div>
+        <br>
+        <!-- Game Log -->
+        <div>
+            <fieldset>
+                <h2>Game Log</h2>
+                <div id='gameLog'></div>
+            </fieldset>
+        </div>
+        <script>
+            // 전역변수
+            let gamerName = ''
+            let aiValue = 0 // 0이라면 세팅된 적이 없다
+            let myValue = 0 // 0이라면 게이머가 입력한 적이 없다
+            let tryCnt = 0 // 시도 횟수
+            let myScore
+            // let myScore = localStorage.getItem(gamerName) != null ? parseInt(localStorage.getItem(gamerName)) : 0
+ 
+            console.log("게이머의 이름을 입력하세요. 단 28자 이내")
+            
+            function onSend() {
+                let tmp = document.querySelector('#yourInput')
+                let yourInput = tmp.value
+                // 입력값의 타입은 무엇인가?
+                // 무조건 문자열, 절대 null 없다
+                // => 웹상으로 주고받는 데이터는 무조건 문자열이다
+                // console.log(typeof yourInput) // string
+                // console.log(yourInput)
+                // console.log(yourInput.length)
+                
+                if(yourInput.length == 0) {
+                    alert("이름을 입력하세요. 단 28자 이내")
+                } else if(yourInput.length > 28) {
+                    alert("28자 이내로 입력하세요.")
+                    tmp.value = '' // 초기화
+                } else {
+                    gamerName = yourInput
+                    // document.querySelector('#gName').innerHTML = `이름 : ${gamerName}`
+                    document.querySelector('#gName').innerHTML 
+                    = `===========================<br>
+                        숫자 맞추기 게임(1~99)<br>
+                        v 1.0.0<br>
+                        ${gamerName}<br>
+                       ===========================`
+                    
+                    // console.log(localStorage.getItem(gamerName))
+                    // console.log(typeof localStorage.getItem(gamerName))
+                    myScore = localStorage.getItem(gamerName) != null ? parseInt(localStorage.getItem(gamerName)) : 0
+                    tmp.value = ''
+                }
+            }
+
+            function gameAI () {
+                return parseInt(Math.random()*99) + 1
+            }
+
+            document.querySelector('#shotBtn').addEventListener('click', ()=>{
+                console.log('숫자 입력')
+                onShot()
+            })
+
+            function onShot() {
+                if(aiValue == 0) {  // 아직 초기화 X
+                    aiValue = gameAI()
+                    console.log(aiValue)
+                }
+
+                let tmp = document.querySelector('#myValue')
+                myValue = parseInt(tmp.value) // 입력값은 문자열, 비교를 위해 정수로 변환
+                tryCnt++
+
+                if( myValue > aiValue ) {
+                    document.querySelector('#gameLog').innerHTML += `${myValue} : 입력값이 큽니다<br>`
+                    tmp.value = ''
+                } else if(myValue < aiValue) {
+                    document.querySelector('#gameLog').innerHTML += `${myValue} : 입력값이 작습니다<br>`
+                    tmp.value = ''
+                } else {
+                    let score = 100 - ((tryCnt-1)*10)
+                    myScore += score
+                    localStorage.setItem(gamerName, myScore)
+                    
+                    document.querySelector('#gameLog').innerHTML += 
+                                `${myValue} : 정답입니다 <br> 이름 : ${gamerName}, 점수 : ${score}, 총 점수 : ${myScore}`
+
+                    setTimeout(()=>{
+                        if(confirm("다시 하시겠습니까?")) {
+                            gameInit()
+                        } else {
+                            alert("Bye")
+                            self.close()
+                        }
+                    }, 1000*1) // 1초 후            
+                }            
+            }
+
+            function gameInit () {
+                aiValue = 0
+                myValue = 0
+                tryCnt = 0
+
+                document.querySelector('#myValue').value = ''
+                document.querySelector('#gameLog').innerHTML = ''   // $('#gameLog').empty()
+            }
+        </script>            
+    </body>
+</html>

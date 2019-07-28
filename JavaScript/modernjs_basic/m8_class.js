@@ -83,9 +83,14 @@ class FoodEx extends Food {
     info () {
         console.log (`재정의 ${this.name} / ${this.age}`)
     }
+    // 새로운 기능 추가
+    attach() {
+        console.log (`기능 추가`)
+    }
 }
 let fe = new FoodEx('애플망고', 10)
 console.log(fe) // FoodEx { name: '애플망고', age: 10 }
 console.log(fe.name)
 console.log(fe.age)
+fe.attach()
 fe.info()

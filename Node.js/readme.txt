@@ -24,14 +24,14 @@ $ npm install -g express-generator
 - 프로젝트 생성 : ejs 엔진으로 html을 렌더링하는 템플릿 엔진을 기본으로 사용한다
 $ express -e (프로젝트명)
 
-- 프로젝트 폴더로 이동
+- 프로젝트 폴더로 이동(change directory)
 $ cd (프로젝트명)
 
-- 이 프로젝트에 필요한 패키지를 다운받아라 -> node_modules가 생성
+- 이 프로젝트에 필요한 패키지를 다운받아라(install dependencies) -> node_modules가 생성
 -> 무슨 근거로, 어떤 패키지를 다운받는가? package.json
 $ npm install
 
-- 서버 가동
+- 서버 가동(run the app)
 $ node ./bin/www  or  $ npm start
 
 - 브라우저 가동

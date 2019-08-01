@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>ReactJs 기본 템플릿</title>
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    <body>
+        <div id = 'root'></div>
+        <script type = 'text/babel'>
+        // 새로고침을 할 때마다 화면에 리액트, 노드, 리덕스가 랜덤으로 출력된다
+            function makeJSX() {
+                const n = Math.floor(Math.random()*3)
+                if(n == 0) {
+                    return <p>리액트</p>
+                } else if (n == 1) {
+                    return <p>노드</p>
+                } else {
+                    return <p>리덕스</p>
+                }
+            }
+            ReactDOM.render( makeJSX(), document.querySelector('#root'))
+        </script>
+    </body>
+</html>

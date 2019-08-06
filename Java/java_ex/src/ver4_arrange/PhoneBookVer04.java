@@ -30,7 +30,6 @@ public class PhoneBookVer04 {
 			choice = MenuViewer.sc.nextInt();
 			MenuViewer.sc.nextLine();
 			
-			System.out.println("시작 전 curIndex 개수 : " + manager.curIndex);
 			switch(choice) {
 				case 1 :
 					manager.savePhoneInfo();

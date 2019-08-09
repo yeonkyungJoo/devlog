@@ -1,12 +1,75 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <p><%= rows %></p>
+    <div>
+      <h1>주식 검색(Ajax, json, jQuery 사용)</h1>
+      <fieldset>
+        <form>
+          <input type = "text" name = "keyword" placeholder="주식명" />
+          <input type = "submit" value = "검색" />
+        </form>
+        <div id = "results" style = "margin-top : 1em;"></div>
+      </fieldset>
+      <script>
+        $('form').on('submit', (evt)=>{
+          evt.preventDefault()
+          $.ajax({
+            url : '/search',                
+            data : $('form').serialize(),   
+            type : 'get',                   
+            dataType : 'json',              
+            success : (data)=>{             
+              console.log('성공', typeof data)
+              $('#results').empty()  
+              $.each( data, (index, item)=> {
+                let html = item.name
+                let word = $('[name = keyword]').val()
+                html = html.replace(word, `<b>${word}</b>`)
+                $('#results').append(`<div id="stock${index}">${html}</div>`)
+                $('#stock${index}').on('click', ()=>{
+                  location.href = `/info/${item.code}?update=0`
+                })
+              })
+            },
+            error : (err)=>{                
+              console.log('실패', err)
+            }      
+          })
+          return false
+        })
+      </script>
+    </div>
+    <div>
+      <h1>주식 리스트</h1>
+      <table border = '1' cellspacing = '0' width = '100%'>
+        <thead>
+          <tr>
+            <th>code</th>
+            <th>name</th>
+            <th>cur</th>
+            <th>rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (row of rows) { %>
+            <tr>
+              <td><%= row.code %></td>
+              <td><%= row.name %></td>
+              <td><%= row.cur %></td>
+              <td><%= row.rate %></td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      $('tbody>tr:even').css('background','lightgreen')      
+    </script>
   </body>
 </html>

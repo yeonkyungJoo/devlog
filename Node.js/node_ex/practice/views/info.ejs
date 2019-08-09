@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <form method = "post">
+            <% if(update != 1) { %>
+            <h2><a href="?update=1">수정화면으로 진입</a></h2>
+            <% } else {          %>
+            <h2>주식 정보 수정하기 <input type = "submit" value = "수정" /></h2>
+            <% }                 %>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>컬럼</th>
+                        <th>값</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(key in stock) { %>
+                        <tr>
+                            <td><%= key %></td>
+                            <td>
+                                <% if( update == 1 && (key == 'cur' || key == 'rate')){ %>
+                                    <%= stock[key] %>
+                                <% } else {                                             %>
+                                    <input type = "text" name = "<%= key %>" value = "<%= stock[key] %>" />
+                                <% }                                                    %>
+                            </td>
+                        </tr>
+                    <% }                   %>    
+                </tbody>
+            </table>
+        </form>
+    </body>
+</html>

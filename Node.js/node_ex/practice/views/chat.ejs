@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script></script>
+    </head>
+    
+    <body>
+        <div class="content-wrapper">
+            <!-- 해당 페이지 헤더 정보 (필수포함) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0 text-dark">실시간 채팅</h1>
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <!-- 페이지 뎁스 설명 -->
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">실시간 채팅</li>
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            
+            <!-- 실제 내용 -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <%- include ./chat_box.ejs %>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <script>
+            /* <script src="/js/chat.js" /> */
+            // 클라이언트 사이드에서 채팅을 주도하는 메인 코드
+            // 주된 표현은 jQuery를 이용해서 처리
+
+            // 1. 서버와 연결을 수행, 결과로 소켓을 하나 리턴
+            const socket = io.connect('http://localhost:3000')
+
+            // 사용자 이름을 전역변수로 관리
+            let user_name = null
+
+            // 2. 서버와 연결됐음을 이벤트로 받아서 사용자 정보를 전송하는 이벤트 발동
+            // 'connect' : 사전에 미리 정의된 이벤트명
+            socket.on('connect', ()=>{
+                user_name = prompt('닉네임을 입력하세요')
+                console.log(user_name)
+                // 이름을 서버로 전송 -> 이벤트를 새로 정의한다
+                // -> 현재 시스템에서만 존재하는 이벤트명 : s_xxx
+                // -> 이벤트 발생 : emit()
+                // (이 시스템에서는) 이벤트를 발생시킨다 == 데이터를 전송한다 
+                // emit() 2번 인자부터는 가변인자 -> 보내고 싶은만큼 알아서 첨부
+                socket.emit('s_send_user_name', user_name, new Date())
+            })
+
+            // 3. 서버가 메시지를 보낸다 -> 화면처리
+            socket.on('c_send_msg', (sender, msg, date)=>{
+                console.log(sender, msg, date)
+                // 서버가 보낸 내용은 왼쪽으로 메시지가 노출된다
+                let msg_html = `
+                <div>
+                    <div>
+                        <span>${sender}</span>
+                        <span>${date}</span>
+                    </div>
+                    <div>
+                        ${msg}
+                    </div>
+                </div>
+                `
+
+                let my_msg_html = `
+                <div>
+                    <div>
+                        <span>${date}</span>
+                    </div>
+                    <div>
+                        ${msg}
+                    </div>
+                </div>
+                `
+            })
+
+
+
+        </script>
+    </body>
+</html>
